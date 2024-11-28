@@ -1,0 +1,40 @@
+name: CI/CD Check Demo
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  ci-cd-check:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Java 11
+      - name: Set up Java 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+
+      # Step 3: Run the JAR file
+      - name: Run CI/CD Check
+        run: |
+          java -jar ci-cd-check.jar remote > output.log
+          echo "=== Output Log ==="
+          cat output.log
+
+      # Step 4: Extract the required outputs
+      - name: Extract and Display Results
+        run: |
+          CODE=$(grep "Code:" output.log | awk '{print $2}')
+          DEBUG_INFO=$(grep "Debug info:" -A 1 output.log)
+          echo "Code: $CODE"
+          echo "Debug Info: $DEBUG_INFO"
+          echo "::set-output name=code::$CODE"
+          echo "::set-output name=debug_info::$DEBUG_INFO"
