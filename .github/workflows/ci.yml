@@ -3,10 +3,10 @@ name: CI/CD Check Demo
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   ci-cd-check:
@@ -21,6 +21,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '11'
+          distribution: 'temurin' # Specify Java distribution (e.g., temurin)
 
       # Step 3: Run the JAR file
       - name: Run CI/CD Check
